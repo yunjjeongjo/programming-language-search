@@ -10,8 +10,9 @@ export default function App({ $target }) {
   };
 
   this.setState = (nextState) => {
-    this.state = nextState;
-    suggestion.setState(this.state.fetchedLanguages);
+    this.state = { ...this.state, ...nextState };
+    console.log(this.state);
+    suggestion.setState({ items: this.state.fetchedLanguages });
     selectedLanguages.setState(this.state.selectedLanguges);
   };
 
@@ -25,22 +26,18 @@ export default function App({ $target }) {
     $target,
     initialState: "",
     onChange: async (keyword) => {
-      try {
-        if (keyword) {
-          const data = await fetchLanguages(keyword);
-          this.setState({ ...this.state, fetchedLanguages: data });
-        } else {
-          this.setState({ ...this.state, fetchedLanguages: [] });
-        }
-      } catch (e) {
-        console.log(e);
+      if (keyword.length === 0) {
+        this.setState({ fetchedLanguages: [] });
+      } else {
+        const languages = await fetchLanguages(keyword);
+        this.setState({ fetchedLanguages: languages });
       }
     },
   });
 
   const suggestion = new Suggestion({
     $target,
-    initialState: this.state.fetchedLanguages,
+    initialState: { items: [] },
     onClick: (value) => {
       if (
         this.state.selectedLanguges.filter((language) => language === value)

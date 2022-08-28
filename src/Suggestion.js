@@ -1,30 +1,31 @@
 export default function Suggestion({ $target, initialState, onClick }) {
-  const $element = document.createElement("div");
-  $element.classList.add("Suggestion");
-  $target.appendChild($element);
+  this.$element = document.createElement("div");
+  this.$element.className = "Suggestion";
+  $target.appendChild(this.$element);
 
   this.state = initialState;
 
   this.setState = (nextState) => {
     this.state = nextState;
+
     this.render();
   };
 
   this.render = () => {
-    if (Array.isArray(this.state)) {
-      if (this.state.length > 0) {
-        $element.style.display = "block";
-        $element.innerHTML = `        
+    const { items = [] } = this.state;
+    if (items.length > 0) {
+      this.$element.style.display = "block";
+      this.$element.innerHTML = `        
             <ul>
-                ${this.state
-                  .map((text, id) => `<li data-id="${id}">${text}</li>`)
+                ${items
+                  .map((item, index) => `<li data-id="${index}">${item}</li>`)
                   .join("")}
             </ul>`;
-      } else {
-        $element.style.display = "none";
-      }
+    } else {
+      this.$element.style.display = "none";
+      this.$element.innerHTML = "";
     }
-    $element.querySelectorAll("li").forEach(($li) => {
+    this.$element.querySelectorAll("li").forEach(($li) => {
       $li.addEventListener("click", (e) => {
         alert(e.target.innerText);
         onClick(e.target.innerText);
