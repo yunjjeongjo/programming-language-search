@@ -8,6 +8,10 @@ export default function SelectedLanguages({ $target, initialState, onClick }) {
 
   this.setState = (nextState) => {
     this.state = nextState;
+    if (this.state.length > 5) {
+      const startIndex = this.state.length - MAX_COUNT;
+      this.state = this.state.slice(startIndex, MAX_COUNT + startIndex);
+    }
     this.render();
   };
 
