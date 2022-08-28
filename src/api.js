@@ -1,18 +1,16 @@
-export function request(url) {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.addEventListener("load", (e) => {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          resolve(JSON.parse(xhr.responseText));
-        } else {
-          reject(xhr.statusText);
-        }
-      }
-    });
-    xhr.addEventListener("error", (e) => reject(xhr.statusText));
+export const API_END_POINT =
+  "https://wr4a6p937i.execute-api.ap-northeast-2.amazonaws.com/dev";
 
-    xhr.open("GET", url);
-    xhr.send();
-  });
-}
+const request = async (url) => {
+  const res = await fetch(url);
+
+  if (res.ok) {
+    const json = await res.json();
+    return json;
+  }
+
+  throw new Error("요청을 가져오는데 실패");
+};
+
+export const fetchLanguages = async (keyword) =>
+  request(`${API_END_POINT}/languages?keyword=${keyword}`);

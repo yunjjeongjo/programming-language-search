@@ -1,5 +1,5 @@
 import SearchForm from "./SearchForm.js";
-import { request } from "./api.js";
+import { fetchLanguages } from "./api.js";
 import Suggestion from "./Suggestion.js";
 import SelectedLanguages from "./SelectedLanguages.js";
 
@@ -26,9 +26,7 @@ export default function App({ $target }) {
     onChange: async (text) => {
       try {
         if (text) {
-          const data = await request(
-            `https://wr4a6p937i.execute-api.ap-northeast-2.amazonaws.com/dev/languages?keyword=${text}`
-          );
+          const data = await fetchLanguages(text);
           this.setState({ ...this.state, results: data });
         } else {
           this.setState({ ...this.state, results: [] });
