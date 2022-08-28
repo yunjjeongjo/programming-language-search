@@ -1,16 +1,14 @@
-export default function SearchForm({ $target, onChange }) {
-  const $form = document.createElement("form");
-  $form.classList.add("SearchInput");
-  $target.appendChild($form);
+export default function SearchForm({ $target, initialState, onChange }) {
+  this.$element = document.createElement("form");
+  this.$element.className = "SearchInput";
+  this.state = initialState;
+  $target.appendChild(this.$element);
 
   this.render = () => {
-    $form.innerHTML = `
+    this.$element.innerHTML = `
         <input class="SearchInput__input" type="text" placeholder="프로그램 언어를 입력하세요.">`;
-    $form.addEventListener("keyup", (e) => {
-      const $input = $form.querySelector("input");
-      const text = $input.value;
-
-      onChange(text);
+    this.$element.addEventListener("keyup", (e) => {
+      onChange(e.target.value);
     });
   };
 

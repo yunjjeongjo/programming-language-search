@@ -23,10 +23,11 @@ export default function App({ $target }) {
 
   const searchForm = new SearchForm({
     $target,
-    onChange: async (text) => {
+    initialState: "",
+    onChange: async (keyword) => {
       try {
-        if (text) {
-          const data = await fetchLanguages(text);
+        if (keyword) {
+          const data = await fetchLanguages(keyword);
           this.setState({ ...this.state, fetchedLanguages: data });
         } else {
           this.setState({ ...this.state, fetchedLanguages: [] });
