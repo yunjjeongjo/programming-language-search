@@ -5,19 +5,19 @@ import SelectedLanguages from "./SelectedLanguages.js";
 
 export default function App({ $target }) {
   this.state = {
-    results: [],
-    selectedList: [],
+    fetchedLanguages: [],
+    selectedLanguges: [],
   };
 
   this.setState = (nextState) => {
     this.state = nextState;
-    suggestion.setState(this.state.results);
-    selectedLanguage.setState(this.state.selectedList);
+    suggestion.setState(this.state.fetchedLanguages);
+    selectedLanguages.setState(this.state.selectedLanguges);
   };
 
-  const selectedLanguage = new SelectedLanguages({
+  const selectedLanguages = new SelectedLanguages({
     $target,
-    initialState: this.state.selectedList,
+    initialState: this.state.selectedLanguges,
     onClick: () => {},
   });
 
@@ -27,9 +27,9 @@ export default function App({ $target }) {
       try {
         if (text) {
           const data = await fetchLanguages(text);
-          this.setState({ ...this.state, results: data });
+          this.setState({ ...this.state, fetchedLanguages: data });
         } else {
-          this.setState({ ...this.state, results: [] });
+          this.setState({ ...this.state, fetchedLanguages: [] });
         }
       } catch (e) {
         console.log(e);
@@ -39,27 +39,31 @@ export default function App({ $target }) {
 
   const suggestion = new Suggestion({
     $target,
-    initialState: this.state.results,
+    initialState: this.state.fetchedLanguages,
     onClick: (value) => {
-      if (this.state.selectedList.filter((language) => language === value)) {
+      if (
+        this.state.selectedLanguges.filter((language) => language === value)
+      ) {
         this.setState({
           ...this.state,
-          selectedList: [
-            ...this.state.selectedList.filter((language) => language !== value),
+          selectedLanguges: [
+            ...this.state.selectedLanguges.filter(
+              (language) => language !== value
+            ),
             value,
           ],
         });
       } else {
-        if (this.state.selectedList.length === 5) {
-          const slicedList = this.state.selectedList.splice(1, 5);
+        if (this.state.selectedLanguges.length === 5) {
+          const slicedList = this.state.selectedLanguges.splice(1, 5);
           this.setState({
             ...this.state,
-            selectedList: [...slicedList, value],
+            selectedLanguges: [...slicedList, value],
           });
         } else {
           this.setState({
             ...this.state,
-            selectedList: [...this.state.selectedList, value],
+            selectedLanguges: [...this.state.selectedLanguges, value],
           });
         }
       }
