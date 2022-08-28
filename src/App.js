@@ -12,7 +12,10 @@ export default function App({ $target }) {
   this.setState = (nextState) => {
     this.state = { ...this.state, ...nextState };
     console.log(this.state);
-    suggestion.setState({ items: this.state.fetchedLanguages });
+    suggestion.setState({
+      items: this.state.fetchedLanguages,
+      selectedIndex: 0,
+    });
     selectedLanguages.setState(this.state.selectedLanguges);
   };
 
@@ -37,7 +40,7 @@ export default function App({ $target }) {
 
   const suggestion = new Suggestion({
     $target,
-    initialState: { items: [] },
+    initialState: { items: [], cursor: 0 },
     onClick: (value) => {
       if (
         this.state.selectedLanguges.filter((language) => language === value)

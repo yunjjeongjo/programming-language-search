@@ -8,7 +8,16 @@ export default function SearchForm({ $target, initialState, onChange }) {
     this.$element.innerHTML = `
         <input class="SearchInput__input" type="text" placeholder="프로그램 언어를 입력하세요.">`;
     this.$element.addEventListener("keyup", (e) => {
-      onChange(e.target.value);
+      const actionIgnoreKeys = [
+        "Enter",
+        "ArrowUp",
+        "ArrowDown",
+        "ArrowRight",
+        "ArrowLeft",
+      ];
+      if (!actionIgnoreKeys.includes(e.key)) {
+        onChange(e.target.value);
+      }
     });
   };
 
