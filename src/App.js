@@ -6,7 +6,7 @@ import SelectedLanguages from "./SelectedLanguages.js";
 export default function App({ $target }) {
   this.state = {
     fetchedLanguages: [],
-    selectedLanguges: [],
+    selectedLanguages: [],
   };
 
   this.setState = (nextState) => {
@@ -16,12 +16,12 @@ export default function App({ $target }) {
       items: this.state.fetchedLanguages,
       selectedIndex: 0,
     });
-    selectedLanguages.setState(this.state.selectedLanguges);
+    selectedLanguages.setState(this.state.selectedLanguages);
   };
 
   const selectedLanguages = new SelectedLanguages({
     $target,
-    initialState: this.state.selectedLanguges,
+    initialState: [],
     onClick: () => {},
   });
 
@@ -41,33 +41,22 @@ export default function App({ $target }) {
   const suggestion = new Suggestion({
     $target,
     initialState: { items: [], cursor: 0 },
-    onClick: (value) => {
-      if (
-        this.state.selectedLanguges.filter((language) => language === value)
-      ) {
-        this.setState({
-          ...this.state,
-          selectedLanguges: [
-            ...this.state.selectedLanguges.filter(
-              (language) => language !== value
-            ),
-            value,
-          ],
-        });
-      } else {
-        if (this.state.selectedLanguges.length === 5) {
-          const slicedList = this.state.selectedLanguges.splice(1, 5);
-          this.setState({
-            ...this.state,
-            selectedLanguges: [...slicedList, value],
-          });
-        } else {
-          this.setState({
-            ...this.state,
-            selectedLanguges: [...this.state.selectedLanguges, value],
-          });
-        }
+    onSelect: (language) => {
+      alert(language);
+
+      const nextSelectedLanguages = [...this.state.selectedLanguages];
+      const index = nextSelectedLanguages.findIndex(
+        (selectedLanguage) => selectedLanguage === language
+      );
+
+      if (index > -1) {
+        nextSelectedLanguages.splice(index, 1);
       }
+      nextSelectedLanguages.push(language);
+      this.setState({
+        ...this.state,
+        selectedLanguages: nextSelectedLanguages,
+      });
     },
   });
 }

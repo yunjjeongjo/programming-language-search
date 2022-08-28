@@ -1,9 +1,10 @@
+const MAX_COUNT = 5;
 export default function SelectedLanguages({ $target, initialState, onClick }) {
-  const $element = document.createElement("div");
-  $element.classList.add("SelectedLanguage");
-  $target.appendChild($element);
-
+  this.$element = document.createElement("div");
+  this.$element.className = "SelectedLanguage";
   this.state = initialState;
+
+  $target.appendChild(this.$element);
 
   this.setState = (nextState) => {
     this.state = nextState;
@@ -12,10 +13,12 @@ export default function SelectedLanguages({ $target, initialState, onClick }) {
 
   this.render = () => {
     if (Array.isArray(this.state)) {
-      $element.innerHTML = `        
+      this.$element.innerHTML = `        
                 <ul>
                     ${this.state
-                      .map((text, id) => `<li data-id="${id}">${text}</li>`)
+                      .map(
+                        (item, index) => `<li data-id="${index}">${item}</li>`
+                      )
                       .join("")}
                 </ul>`;
     }

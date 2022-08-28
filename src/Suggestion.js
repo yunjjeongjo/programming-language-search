@@ -12,7 +12,6 @@ export default function Suggestion({
 
   this.setState = (nextState) => {
     this.state = nextState;
-
     this.render();
   };
 
@@ -37,32 +36,40 @@ export default function Suggestion({
       this.$element.style.display = "none";
       this.$element.innerHTML = "";
     }
-
-    window.addEventListener("keyup", (e) => {
-      if (items.length > 0) {
-        const lastIndex = items.length - 1;
-        const navigationKeys = ["ArrowUp", "ArrowDown"];
-        let nextIndex = selectedIndex;
-
-        if (navigationKeys.includes(e.key)) {
-          if (e.key === "ArrowUp") {
-            nextIndex = selectedIndex === 0 ? lastIndex : nextIndex - 1;
-          } else if (e.key === "ArrowDown") {
-            nextIndex = selectedIndex === lastIndex ? 0 : nextIndex + 1;
-          }
-        }
-
-        this.setState({ ...this.state, selectedIndex: nextIndex });
-      }
-    });
-
-    this.$element.querySelectorAll("li").forEach(($li) => {
-      $li.addEventListener("click", (e) => {
-        alert(e.target.innerText);
-        onClick(e.target.innerText);
-      });
-    });
   };
+
+  window.addEventListener("keyup", (e) => {
+    if (this.state.items.length > 0) {
+      const { selectedIndex } = this.state;
+      const lastIndex = this.state.items.length - 1;
+      const navigationKeys = ["ArrowUp", "ArrowDown"];
+      let nextIndex = selectedIndex;
+
+      if (navigationKeys.includes(e.key)) {
+        if (e.key === "ArrowUp") {
+          nextIndex = selectedIndex === 0 ? lastIndex : nextIndex - 1;
+        } else if (e.key === "ArrowDown") {
+          nextIndex = selectedIndex === lastIndex ? 0 : nextIndex + 1;
+        }
+      } else if (e.key === "Enter") {
+        onSelect(this.state.items[selectedIndex]);
+      }
+
+      this.setState({ ...this.state, selectedIndex: nextIndex });
+    }
+  });
+
+  this.$element.addEventListener("click", (e) => {
+    const $li = e.target.closest("li");
+    if ($li) {
+      const { id } = $li.dataset;
+      try {
+        onSelect(this.state.items[parseInt(id)]);
+      } catch {
+        alert("선택할 수 없습니다!");
+      }
+    }
+  });
 
   this.render();
 }
