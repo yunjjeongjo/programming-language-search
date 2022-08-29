@@ -1,35 +1,49 @@
-export default function Suggestion({
-  $target,
-  initialState,
-  onSelect,
-  onClick,
-}) {
+export default function Suggestion({ $target, initialState, onSelect }) {
   this.$element = document.createElement("div");
   this.$element.className = "Suggestion";
   $target.appendChild(this.$element);
 
-  this.state = { items: initialState.items, selectedIndex: 0 };
+  this.state = {
+    items: initialState.items,
+    selectedIndex: 0,
+    currentKeyword: "",
+  };
 
   this.setState = (nextState) => {
     this.state = nextState;
     this.render();
   };
 
+  this.renderMatchedItem = (keyword, item) => {
+    if (!item.includes(keyword)) {
+      return item;
+    }
+    const matchedText = item.match(new RegExp(keyword, "gi"))[0];
+    return item.replace(
+      new RegExp(matchedText, "gi"),
+      `<span class="Suggestion__item--matched">${matchedText}</span>`
+    );
+  };
+
   this.render = () => {
-    const { items = [], selectedIndex } = this.state;
+    const { items, selectedIndex, currentKeyword } = this.state;
+
     if (items.length > 0) {
       this.$element.style.display = "block";
+
       this.$element.innerHTML = `        
             <ul>
                 ${items
-                  .map(
-                    (item, index) =>
-                      `<li class="${
-                        index === selectedIndex
-                          ? "Suggestion__item--selected"
-                          : ""
-                      }" data-id="${index}">${item}</li>`
-                  )
+                  .map((item, index) => {
+                    return `<li class="${
+                      index === selectedIndex
+                        ? "Suggestion__item--selected"
+                        : ""
+                    }" data-index="${index}">${this.renderMatchedItem(
+                      currentKeyword,
+                      item
+                    )}</li>`;
+                  })
                   .join("")}
             </ul>`;
     } else {
@@ -62,9 +76,9 @@ export default function Suggestion({
   this.$element.addEventListener("click", (e) => {
     const $li = e.target.closest("li");
     if ($li) {
-      const { id } = $li.dataset;
+      const { index } = $li.dataset;
       try {
-        onSelect(this.state.items[parseInt(id)]);
+        onSelect(this.state.items[parseInt(index)]);
       } catch {
         alert("선택할 수 없습니다!");
       }
