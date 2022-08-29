@@ -6,7 +6,7 @@ export default function Suggestion({ $target, initialState, onSelect }) {
   this.state = {
     items: initialState.items,
     selectedIndex: 0,
-    currentKeyword: "",
+    keyword: "",
   };
 
   this.setState = (nextState) => {
@@ -26,7 +26,7 @@ export default function Suggestion({ $target, initialState, onSelect }) {
   };
 
   this.render = () => {
-    const { items, selectedIndex, currentKeyword } = this.state;
+    const { items, selectedIndex, keyword } = this.state;
 
     if (items.length > 0) {
       this.$element.style.display = "block";
@@ -40,7 +40,7 @@ export default function Suggestion({ $target, initialState, onSelect }) {
                         ? "Suggestion__item--selected"
                         : ""
                     }" data-index="${index}">${this.renderMatchedItem(
-                      currentKeyword,
+                      keyword,
                       item
                     )}</li>`;
                   })

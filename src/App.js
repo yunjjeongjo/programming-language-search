@@ -7,7 +7,7 @@ export default function App({ $target }) {
   this.state = {
     fetchedLanguages: [],
     selectedLanguages: [],
-    currentKeyword: "",
+    keyword: "",
   };
 
   this.setState = (nextState) => {
@@ -15,7 +15,7 @@ export default function App({ $target }) {
     suggestion.setState({
       items: this.state.fetchedLanguages,
       selectedIndex: 0,
-      currentKeyword: this.state.currentKeyword,
+      keyword: this.state.keyword,
     });
     selectedLanguages.setState(this.state.selectedLanguages);
   };
@@ -31,10 +31,10 @@ export default function App({ $target }) {
     initialState: "",
     onChange: async (keyword) => {
       if (keyword.length === 0) {
-        this.setState({ fetchedLanguages: [], currentKeyword: "" });
+        this.setState({ fetchedLanguages: [], keyword: "" });
       } else {
         const languages = await fetchLanguages(keyword);
-        this.setState({ fetchedLanguages: languages, currentKeyword: keyword });
+        this.setState({ fetchedLanguages: languages, keyword: keyword });
       }
     },
   });
