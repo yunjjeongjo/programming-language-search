@@ -1,23 +1,27 @@
 import SearchForm from "./SearchForm.js";
-import { fetchLanguages } from "./api.js";
+import { fetchLanguages } from "../util/api.js";
 import Suggestion from "./Suggestion.js";
 import SelectedLanguages from "./SelectedLanguages.js";
+import { setItem, getItem } from "../util/storage.js";
 
 export default function App({ $target }) {
   this.state = {
     fetchedLanguages: [],
     selectedLanguages: [],
     keyword: "",
+    cursor: 0,
   };
 
   this.setState = (nextState) => {
     this.state = { ...this.state, ...nextState };
+    searchForm.setState(this.state.keyword);
     suggestion.setState({
       items: this.state.fetchedLanguages,
-      selectedIndex: 0,
+      selectedIndex: this.state.cursor,
       keyword: this.state.keyword,
     });
     selectedLanguages.setState(this.state.selectedLanguages);
+    setItem("lastState", this.state);
   };
 
   const selectedLanguages = new SelectedLanguages({
@@ -28,7 +32,7 @@ export default function App({ $target }) {
 
   const searchForm = new SearchForm({
     $target,
-    initialState: "",
+    initialState: this.state.keyword,
     onChange: async (keyword) => {
       if (keyword.length === 0) {
         this.setState({ fetchedLanguages: [], keyword: "" });
@@ -41,7 +45,7 @@ export default function App({ $target }) {
 
   const suggestion = new Suggestion({
     $target,
-    initialState: { items: [], cursor: 0 },
+    initialState: { items: [], cursor: this.state.cursor },
     onSelect: (language) => {
       alert(language);
 
@@ -57,7 +61,19 @@ export default function App({ $target }) {
       this.setState({
         ...this.state,
         selectedLanguages: nextSelectedLanguages,
+        cursor: selectedIndex,
       });
     },
   });
+
+  if (getItem("lastState") !== null) {
+    const lastState = getItem("lastState");
+
+    this.setState({
+      selectedLanguages: lastState.selectedLanguages,
+      keyword: lastState.keyword,
+      fetchedLanguages: lastState.fetchedLanguages,
+      cursor: lastState.cursor,
+    });
+  }
 }

@@ -1,3 +1,5 @@
+import { getItem, setItem } from "../util/storage.js";
+
 export default function Suggestion({ $target, initialState, onSelect }) {
   this.$element = document.createElement("div");
   this.$element.className = "Suggestion";
@@ -5,7 +7,7 @@ export default function Suggestion({ $target, initialState, onSelect }) {
 
   this.state = {
     items: initialState.items,
-    selectedIndex: 0,
+    selectedIndex: initialState.selectedIndex,
     keyword: "",
   };
 
@@ -64,6 +66,12 @@ export default function Suggestion({ $target, initialState, onSelect }) {
           nextIndex = selectedIndex === 0 ? lastIndex : nextIndex - 1;
         } else if (e.key === "ArrowDown") {
           nextIndex = selectedIndex === lastIndex ? 0 : nextIndex + 1;
+        }
+
+        if (getItem("lastState") !== null) {
+          const temp = getItem("lastState");
+          temp["cursor"] = nextIndex;
+          setItem("lastState", temp);
         }
       } else if (e.key === "Enter") {
         onSelect(this.state.items[selectedIndex]);

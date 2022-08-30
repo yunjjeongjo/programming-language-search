@@ -5,9 +5,14 @@ export default function SearchForm({ $target, initialState, onChange }) {
 
   $target.appendChild(this.$element);
 
+  this.setState = (nextState) => {
+    this.state = nextState;
+    this.render();
+  };
+
   this.render = () => {
     this.$element.innerHTML = `
-        <input class="SearchInput__input" type="text" placeholder="프로그램 언어를 입력하세요.">`;
+        <input class="SearchInput__input" type="text" placeholder="프로그램 언어를 입력하세요." value="${this.state}">`;
     this.$li = document.querySelector("input");
     this.$li.focus();
     let timer;
