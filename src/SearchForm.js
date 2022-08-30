@@ -10,6 +10,7 @@ export default function SearchForm({ $target, initialState, onChange }) {
         <input class="SearchInput__input" type="text" placeholder="프로그램 언어를 입력하세요.">`;
     this.$li = document.querySelector("input");
     this.$li.focus();
+    let timer;
     this.$element.addEventListener("keyup", (e) => {
       const actionIgnoreKeys = [
         "Enter",
@@ -19,7 +20,13 @@ export default function SearchForm({ $target, initialState, onChange }) {
         "ArrowLeft",
       ];
       if (!actionIgnoreKeys.includes(e.key)) {
-        onChange(e.target.value);
+        if (timer) {
+          clearTimeout(timer);
+        }
+        timer = setTimeout(() => {
+          timer = null;
+          onChange(e.target.value);
+        }, 200);
       }
     });
 
