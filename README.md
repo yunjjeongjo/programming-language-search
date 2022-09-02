@@ -23,7 +23,7 @@
 - [x] 언어 중복 선택 처리 (이미 선택된 언어를 다시 넣으면 맨 뒤로)
 - [x] 선택된 언어 최대 갯수 제한 (5개 제한, FIFO)
 
-### 보너스 구현사항
+### [보너스 구현사항](https://github.com/yunjjeongjo/programming-language-search/issues/1)
 
 #### 사용성 개선
 
